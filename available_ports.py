@@ -59,7 +59,7 @@ def available_ports(topology, network):
                     del(list_of_directions[-1]) 
                 # or if this node is in any other column ... 
                 else:
-                    # so add west and east to the list
+                    # add west and east to the list
                     list_of_directions.extend(['W', 'E'])
                     available_directions[network[row_index][col_index]] = []
                     for i in range (0, len(list_of_directions)):

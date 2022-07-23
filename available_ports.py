@@ -3,12 +3,9 @@ import network_matrix
 """
 Map the nodes in the router network to a list of available ports
 Input: topology (string), network (can be a 2D list obtained from network_matrix)
-Output: A dictionary with key as a node id and value as the list of directions
-allowed for packet movement from that node
+Output: A dictionary with key as a node id and value as the list of directions allowed for packet movement from that node
 The topology determines which directions are allowed.
-In torus topology, all directions are allowed in each node, so 
-direction-related information becomes irrelevant. This is not the case for 
-mesh topology.
+In torus topology, all directions are allowed in each node, so direction-related information becomes irrelevant. This is not the case for mesh topology.
 """
 
 def available_ports(topology, network): 

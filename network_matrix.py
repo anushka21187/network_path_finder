@@ -2,7 +2,7 @@
 Create a router network 
 Input: number of rows, number of columns
 Output: 2D matrix of node IDs 
-Relevant topology: torus
+Relevant topologies: mesh, torus
 """
 
 def network_matrix(number_of_rows, number_of_columns): 

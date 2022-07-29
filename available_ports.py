@@ -1,5 +1,3 @@
-import network_matrix
-
 """
 Map the nodes in the router network to a list/tuple of available ports
 Input: topology (string), network (can be a 2D tuple or list obtained from network_matrix)

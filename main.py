@@ -3,7 +3,7 @@ import available_ports
 import obtain_paths
 
 # 2x3 matrix
-number_of_rows = 2
+number_of_rows = 3
 number_of_columns = 3
 
 source = 0

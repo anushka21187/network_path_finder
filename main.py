@@ -13,8 +13,6 @@ mesh = network_matrix(number_of_rows, number_of_columns)
 port_map_mesh = available_ports('mesh', mesh)
 #port_map_torus = available_ports('torus', mesh)
 
-empty_dict = {}
-empty_list = []
 source_directions = port_map_mesh[source]
 
-dictionary_of_paths = obtain_paths(port_map_mesh, number_of_rows, number_of_columns, source, destination, empty_list, source_directions, empty_dict)
+dictionary_of_paths = obtain_paths(port_map_mesh, number_of_rows, number_of_columns, source, destination, [], source_directions, {})

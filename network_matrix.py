@@ -15,5 +15,5 @@ def network_matrix(number_of_rows, number_of_columns):
         for col_index in range (0, number_of_columns):
             matrix_row.append(node_id)
             node_id = node_id + 1
-        matrix.append(matrix_row)
-    return matrix
+        matrix.append(tuple(matrix_row))
+    return tuple(matrix)

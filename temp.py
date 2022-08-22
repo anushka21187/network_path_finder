@@ -15,16 +15,16 @@ Output: 2D matrix of node IDs
 Relevant topologies: mesh, torus
 """
 
-def network_matrix(number_of_rows, number_of_columns): 
+def network_matrix(r, c): 
     #matrix = [[0]*number_of_columns]*number_of_rows
     #return matrix 
     
     matrix = []
     
     node_id = 0
-    for row_index in range (0, number_of_rows):
+    for row_index in range (0, r):
         matrix_row = []
-        for col_index in range (0, number_of_columns):
+        for col_index in range (0, c):
             matrix_row.append(node_id)
             node_id = node_id + 1
         matrix.append(tuple(matrix_row))
@@ -43,7 +43,9 @@ direction-related information becomes irrelevant. This is not the case for
 mesh topology.
 """
 
-def available_ports(topology, network): 
+def available_ports(topology, r, c): 
+    
+    network = network_matrix(r, c)
     
     available_directions = {} 
     
@@ -110,7 +112,9 @@ For example, a dictionary entry 2:[(4,1,2), (4,5,2)] has
 """
 
 
-def obtain_paths(network_dict, sn, dn, visited_nodes, path_dict): 
+def obtain_paths(r, c, sn, dn, visited_nodes, path_dict): 
+    
+    network_dict = available_ports('mesh', r, c)
     global source
     allowed_directions = network_dict[sn]
     
@@ -127,12 +131,12 @@ def obtain_paths(network_dict, sn, dn, visited_nodes, path_dict):
  
         for i in range (0, len(allowed_directions)):
             if allowed_directions[i] == 'S':
-                tentative_node = sn + number_of_columns
+                tentative_node = sn + c
                 # MUST MODIFY number_of_rows, number_of_columns GLOBALLY 
                 # TO MODIFY network_dict
                 # AND TO CALCULATE allowed_directions AND tentative_node CORRECTLY
             elif allowed_directions[i] == 'N':
-                tentative_node = sn - number_of_columns
+                tentative_node = sn - c
             elif allowed_directions[i] == 'W':
                 tentative_node = sn - 1
             else:
@@ -144,14 +148,16 @@ def obtain_paths(network_dict, sn, dn, visited_nodes, path_dict):
                 sn_updated = tentative_node
                 visited_nodes.append(sn_updated)
                 #dir_list = network_dict[sn_updated]
-                obtain_paths(network_dict, sn_updated, dn, visited_nodes, path_dict)
+                obtain_paths(r, c, sn_updated, dn, visited_nodes, path_dict)
                 del(visited_nodes[-1])
                 
     return path_dict
 
 
 # create another obtain_paths that lists out directions to take between s and d
-def obtain_paths_directions(network_dict, sn, dn, visited_nodes, directions_to_take, path_dict): 
+def obtain_paths_directions(r, c, sn, dn, visited_nodes, directions_to_take, path_dict): 
+    
+    network_dict = available_ports('mesh', r, c)
     global source
     allowed_directions = network_dict[sn]
     
@@ -168,10 +174,10 @@ def obtain_paths_directions(network_dict, sn, dn, visited_nodes, directions_to_t
  
         for i in range (0, len(allowed_directions)):
             if allowed_directions[i] == 'S':
-                tentative_node = sn + number_of_columns
+                tentative_node = sn + c
                 next_direction = allowed_directions[i]
             elif allowed_directions[i] == 'N':
-                tentative_node = sn - number_of_columns
+                tentative_node = sn - c
                 next_direction = allowed_directions[i]
             elif allowed_directions[i] == 'W':
                 tentative_node = sn - 1
@@ -186,7 +192,7 @@ def obtain_paths_directions(network_dict, sn, dn, visited_nodes, directions_to_t
                 sn_updated = tentative_node
                 visited_nodes.append(sn_updated)
                 directions_to_take.append(next_direction)
-                obtain_paths_directions(network_dict, sn_updated, dn, visited_nodes, directions_to_take, path_dict)
+                obtain_paths_directions(r, c, sn_updated, dn, visited_nodes, directions_to_take, path_dict)
                 del(visited_nodes[-1])
                 del(directions_to_take[-1])
                 
@@ -202,24 +208,6 @@ def make_source(router_id):
     global source
     source = router_id
 
-"""
-make a global destination
-"""
-def make_destination(router_id):
-    global destination
-    destination = router_id
-    
-"""
-modify number_of_rows and number_of_columns
-"""
-def make_rows(r):
-    global number_of_rows
-    number_of_rows = r
-    
-def make_columns(c):
-    global number_of_columns
-    number_of_columns = c
-    
 
 
 """
@@ -238,23 +226,23 @@ get maximum possible number of hops for an NxN matrix
 list or dictionary of path pairs
 hops can be access using list(dictionary.keys())[index]
 """
-def hops_and_path_pairs(s1, s2, d):
-    pair_dict = {}
-    
-    make_destination(d)
+def hops_and_path_pairs(r, c, s1, s2, d):
+    pair_dict = {} 
     
     # list out the valid hops for a given source and destination pair
     make_source(s1)
     #path_dict_1 = obtain_paths(router_ids_ports, s1, d, [], {})
-    path_dict_1 = obtain_paths_directions(router_ids_ports, s1, d, [], [], {})
+    path_dict_1 = obtain_paths_directions(r, c, s1, d, [], [], {})
     
     make_source(s2)
     #path_dict_2 = obtain_paths(router_ids_ports, s2, d, [], {})
-    path_dict_2 = obtain_paths_directions(router_ids_ports, s2, d, [], [], {})
+    path_dict_2 = obtain_paths_directions(r, c, s2, d, [], [], {})
     
     
-    hops_list_1 = list(path_dict_1.keys()) 
+    hops_list_1 = list(path_dict_1.keys())
+    hops_list_1.sort()
     hops_list_2 = list(path_dict_2.keys())
+    hops_list_2.sort()
     
     # iterate through the first dictionary
     for i in range(0, len(path_dict_1)):
@@ -285,8 +273,8 @@ def hops_and_path_pairs(s1, s2, d):
 convert paths to string bit sequences
 ref: N = 00, S = 01, W = 10, E = 11
 """
-def hops_and_pathbits_pairs(s1, s2, d):
-    hops_pairs = hops_and_path_pairs(s1, s2, d)
+def hops_and_pathbits_pairs(r, c, s1, s2, d):
+    hops_pairs = hops_and_path_pairs(r, c, s1, s2, d)
     
     pathbitspairs_perhop = {} 
     hops_list = list(hops_pairs.keys()) 
@@ -363,24 +351,35 @@ Iterations will go like this:
     PERMUTATIONS --> s1 != d; s2 != d AND s2 != s1
     
 """
-def generate_all_pairs(network):
+def generate_all_pairs(r, c): 
+    
+    network = network_matrix(r, c)
+    
+    spaces = "          " # 10 spaces
+    spaces_halved = "     " # 5 spaces
+    spaces_halved_small = "    " # 4 spaces
+    file_extension = ".txt"
+    filename = "NoC_" + str(r) + "x" + str(c) + file_extension
     
     with open(filename, "w") as f0:
         f0.write("----- START ----- \n\n")
-        f0.write("Number of rows = " + str(number_of_rows) + " \n")
-        f0.write("Number of columns = " + str(number_of_columns) + " \n")
+        f0.write("Number of rows = " + str(r) + " \n")
+        f0.write("Number of columns = " + str(c) + " \n")
         f0.write("Network: \n")
         
         f0.write(spaces)
         for i in range(0, len(network)):
             for j in range(0, len(network[i])):
-                f0.write(str(network[i][j])+spaces_halved)
+                if network[i][j] < 10:
+                    f0.write(str(network[i][j])+spaces_halved)
+                else:
+                    f0.write(str(network[i][j])+spaces_halved_small)
             f0.write("\n"+spaces)
         f0.write("\n")
         
         f0.write("Port reference: N = 00, S = 01, W = 10, E = 11 \n\n\n")
     
-    # list out all router ids first
+    # list out all router ids first, i.e., flatten the network
     routers = []
     for i in range(0, len(network)):
         for j in range(0, len(network[i])):
@@ -399,7 +398,7 @@ def generate_all_pairs(network):
                         #s2 = 1
                         s2 = routers[k]
                         
-                        hops_pairs_bits = hops_and_pathbits_pairs(s1, s2, d)
+                        hops_pairs_bits = hops_and_pathbits_pairs(r, c, s1, s2, d)
                         if len(hops_pairs_bits) != 0:
                             number_of_pairs_perhop = number_of_path_pairs(hops_pairs_bits)
                             hops_list = list(number_of_pairs_perhop.keys())
@@ -427,7 +426,7 @@ def generate_all_pairs(network):
                                     value = hops_pairs_bits[key]
                                     for index2 in range(0, len(value)):
                                         pair = value[index2]
-                                        f1.write(spaces+spaces+"PAIR_"+str(index2)+": ("+pair[0]+", "+pair[1]+") \n")
+                                        f1.write(spaces+spaces+"PAIR_"+str(index2+1)+": ("+pair[0]+", "+pair[1]+") \n")
                                
                                 f1.write("\n\n")
                         
@@ -436,24 +435,35 @@ def generate_all_pairs(network):
                         
 
 
-def generate_all_pairs_permutations(network):
+def generate_all_pairs_permutations(r, c):
+    
+    network = network_matrix(r, c)
+    
+    spaces = "          " # 10 spaces
+    spaces_halved = "     " # 5 spaces
+    spaces_halved_small = "    " # 4 spaces
+    file_extension = ".txt" 
+    filename_p = "NoC_P_" + str(r) + "x" + str(c) + file_extension
     
     with open(filename_p, "w") as f0:
         f0.write("----- START ----- \n\n")
-        f0.write("Number of rows = " + str(number_of_rows) + " \n")
-        f0.write("Number of columns = " + str(number_of_columns) + " \n")
+        f0.write("Number of rows = " + str(r) + " \n")
+        f0.write("Number of columns = " + str(c) + " \n")
         f0.write("Network: \n")
         
         f0.write(spaces)
         for i in range(0, len(network)):
             for j in range(0, len(network[i])):
-                f0.write(str(network[i][j])+spaces_halved)
+                if network[i][j] < 10:
+                    f0.write(str(network[i][j])+spaces_halved)
+                else:
+                    f0.write(str(network[i][j])+spaces_halved_small)
             f0.write("\n"+spaces)
         f0.write("\n")
         
         f0.write("Port reference: N = 00, S = 01, W = 10, E = 11 \n\n\n")
     
-    # list out all router ids first
+    # list out all router ids first, i.e., flatten the network
     routers = []
     for i in range(0, len(network)):
         for j in range(0, len(network[i])):
@@ -472,7 +482,7 @@ def generate_all_pairs_permutations(network):
                         #s2 = 1
                         s2 = routers[k]
                         
-                        hops_pairs_bits = hops_and_pathbits_pairs(s1, s2, d)
+                        hops_pairs_bits = hops_and_pathbits_pairs(r, c, s1, s2, d)
                         if len(hops_pairs_bits) != 0:
                             number_of_pairs_perhop = number_of_path_pairs(hops_pairs_bits)
                             hops_list = list(number_of_pairs_perhop.keys())
@@ -500,51 +510,55 @@ def generate_all_pairs_permutations(network):
                                     value = hops_pairs_bits[key]
                                     for index2 in range(0, len(value)):
                                         pair = value[index2]
-                                        f1.write(spaces+spaces+"PAIR_"+str(index2)+": ("+pair[0]+", "+pair[1]+") \n")
+                                        f1.write(spaces+spaces+"PAIR_"+str(index2+1)+": ("+pair[0]+", "+pair[1]+") \n")
                                
                                 f1.write("\n\n")
                         
     with open(filename_p, "a") as f2:
         f2.write("----- END ----- \n")            
                 
+
+"""
+generated triplets and paths for a range of network matrix orders
 """
 def generate_over_range(limit):
-    for i in range(2, limit):
-        make_rows(i)
-        make_columns(i)
-        generate_all_pairs(network_matrix(number_of_rows, number_of_columns))
-"""
+    for i in range(2, limit): 
+        generate_all_pairs(i, i)
+
+def generate_over_range_permutations(limit):
+    for i in range(2, limit): 
+        generate_all_pairs_permutations(i, i)
 
 
 
 # ----- user inputs ----- #
-number_of_rows = int(input("Number of rows = "))
-number_of_columns = int(input("Number of columns = "))
-#number_of_rows = 2
-#number_of_columns = 2
+#number_of_rows = int(input("Number of rows = "))
+#number_of_columns = int(input("Number of columns = "))
+#number_of_rows = 0
+#number_of_columns = 0
 # ----- end of user inputs ----- #
 
 
 # ----- modifiable global variables ----- #
-source_1 = 1
-source_2 = 3
-destination = 2
+#source_1 = 1
+#source_2 = 3
+#source = 0
+#destination = 0
 # ----- end of modifiable global variables ----- #
 
 
 # ----- file variables ----- #
-spaces = "          " # 10 spaces
-spaces_halved = "     " # 5 spaces
-file_extension = ".txt"
-filename = "NoC_" + str(number_of_rows) + "x" + str(number_of_columns) + file_extension
-filename_p = "NoC_P_" + str(number_of_rows) + "x" + str(number_of_columns) + file_extension
+#spaces = "          " # 10 spaces
+#spaces_halved = "     " # 5 spaces
+#file_extension = ".txt"
+#filename = "NoC_" + str(number_of_rows) + "x" + str(number_of_columns) + file_extension
+#filename_p = "NoC_P_" + str(number_of_rows) + "x" + str(number_of_columns) + file_extension
 # ----- end of file variables ----- #
 
 
-mesh_network = network_matrix(number_of_rows, number_of_columns)
-router_ids_ports = available_ports('mesh', mesh_network)
+#mesh_network = network_matrix(number_of_rows, number_of_columns)
+#router_ids_ports = available_ports('mesh', mesh_network)
 #port_map_torus = available_ports('torus', mesh_network 
-source = 0
 #source_directions = router_ids_ports[source] # default source for testing
 
 #dictionary_of_paths = obtain_paths(router_ids_ports, source, destination, [], {})
@@ -564,6 +578,7 @@ source = 0
 #s1_s2_pairs = hops_and_path_pairs(source_1, source_2, destination)
 #pairs_in_bits = hops_and_pathbits_pairs(source_1, source_2, destination)
 #hopsperpair = number_of_path_pairs(pairs_in_bits)
-generate_all_pairs(mesh_network)
-generate_all_pairs_permutations(mesh_network)
-#generate_over_range(5)
+#generate_all_pairs(4, 4)
+#generate_all_pairs_permutations(2, 2)
+generate_over_range(4)
+#generate_over_range_permutations(4)

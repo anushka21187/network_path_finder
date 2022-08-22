@@ -519,7 +519,7 @@ def generate_all_pairs_permutations(r, c):
                 
 
 """
-generated triplets and paths for a range of network matrix orders
+generate triplets and paths for a range of network matrix orders
 """
 def generate_over_range(limit):
     for i in range(2, limit): 

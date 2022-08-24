@@ -32,7 +32,6 @@ MISCELLANEOUS
   * Limit the maximum number of hops (y/n)
     - Maximum number of hops
   * Exclude overlapping paths? (y/n)
-  
   Results and Summary are dumped in the NoC directory.
 3. Include the following in the report:
   * A summary of user inputs:

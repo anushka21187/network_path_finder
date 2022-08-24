@@ -496,8 +496,8 @@ def generate_all_pairs_permutations(r, c):
                             
                             with open(filename_p, "a") as f1:
                                 f1.write("s1 = "+str(s1)+", s2 = "+str(s2)+", d = "+str(d)+": \n")
-                                f1.write(spaces+"Minimum hops = "+str(min_hops)+" \n")
-                                f1.write(spaces+"Maximum hops = "+str(max_hops)+" \n")
+                                f1.write(spaces+"Shortest path = "+str(min_hops)+" hops \n")
+                                f1.write(spaces+"Longest path = "+str(max_hops)+" hops \n")
                                 f1.write(spaces+"Minimum path pairs = "+str(min_pairs)+" ")
                                 f1.write("for hop count = "+str(min_pairs_hop)+" \n")
                                 f1.write(spaces+"Maximum path pairs = "+str(max_pairs)+" ")
@@ -521,11 +521,11 @@ def generate_all_pairs_permutations(r, c):
 """
 generate triplets and paths for a range of network matrix orders
 """
-def generate_over_range(limit):
+def generate_upto(limit):
     for i in range(2, limit+1): 
         generate_all_pairs(i, i)
 
-def generate_over_range_permutations(limit):
+def generate_upto_permutations(limit):
     for i in range(2, limit+1): 
         generate_all_pairs_permutations(i, i)
 
@@ -580,5 +580,5 @@ def generate_over_range_permutations(limit):
 #hopsperpair = number_of_path_pairs(pairs_in_bits)
 #generate_all_pairs(4, 4)
 #generate_all_pairs_permutations(2, 2)
-generate_over_range(4)
-#generate_over_range_permutations(4)
+generate_upto(4)
+#generate_upto_permutations(4)

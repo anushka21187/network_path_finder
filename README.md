@@ -33,7 +33,7 @@ MISCELLANEOUS
     - Maximum number of hops
   * Exclude overlapping paths? (y/n)
   Results are dumped in the NoC directory.
-3. Include the following the report:
+3. Include the following in the report:
   * A summary of user inputs:
     - Number of rows
     - Number of columns

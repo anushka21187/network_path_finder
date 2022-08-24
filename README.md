@@ -32,7 +32,7 @@ MISCELLANEOUS
   * Limit the maximum number of hops (y/n)
     - Maximum number of hops
   * Exclude overlapping paths? (y/n)
-  Results are dumped in the NoC directory.
+  Results and Summary are dumped in the NoC directory.
 3. Include the following in the report:
   * A summary of user inputs:
     - Number of rows
@@ -41,7 +41,7 @@ MISCELLANEOUS
     - Maximum number of hops (can be NA)
     - Overlapping paths excluded? (YES or NO)
   * A summary of statisics:
-    For an mXn mesh network, the 
+    Use the generated report for calculating these stats and then dump them to another summary file. For an mXn mesh network, find the: 
       - Longest path in hops
       - Shortest path in hops
       - Maximum path pairs of the same length 

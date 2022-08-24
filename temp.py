@@ -522,11 +522,11 @@ def generate_all_pairs_permutations(r, c):
 generate triplets and paths for a range of network matrix orders
 """
 def generate_over_range(limit):
-    for i in range(2, limit): 
+    for i in range(2, limit+1): 
         generate_all_pairs(i, i)
 
 def generate_over_range_permutations(limit):
-    for i in range(2, limit): 
+    for i in range(2, limit+1): 
         generate_all_pairs_permutations(i, i)
 
 

@@ -41,14 +41,14 @@ MISCELLANEOUS
     - Maximum number of hops (can be NA)
     - Overlapping paths excluded? (YES or NO)
   * A summary of statisics:
-    - For an mXn mesh network, the 
-      Longest path in hops
-      Shortest path in hops
-      Maximum path pairs of the same length 
-        The number of hops
-        The triplet and the number of pairs
-        The triplet and the number of pairs ...
-      Minimum path pairs of the same length
-        The number of hops
-        The triplet and the number of pairs
-        The triplet and the number of pairs ...
+    For an mXn mesh network, the 
+      - Longest path in hops
+      - Shortest path in hops
+      - Maximum path pairs of the same length 
+        - The number of hops
+        - The triplet and the number of pairs
+        - The triplet and the number of pairs ...
+      - Minimum path pairs of the same length
+        - The number of hops
+        - The triplet and the number of pairs
+        - The triplet and the number of pairs ...

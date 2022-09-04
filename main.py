@@ -9,17 +9,11 @@ from reportformat import *
 from generate import *
 
 source = 0
-"""
-SET DIRECTION BITS HERE
-"""
+
 north = 'northbits'
 south = 'southbits'
 west = 'westbits'
 east = 'eastbits'
-"""
-END OF DIRECTION BITS. Do not modify any other part of this script.
-"""
-
 
 mesh_size_var = anushka_1
 num_sources_var = anushka_s

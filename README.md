@@ -1,54 +1,26 @@
 # network_path_finder
 
-Two Sources, One Destination
+Command: ./cmd <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2>
 
-Mesh topology can be represented as a 2D matrix, where each element is a node/router
+- square_mesh_dimension: number of rows/columns in the mesh; cannot be less than 2
+- num_sources: 1 for route pairs between one source and a fixed destination, 2 for the same between two different sources and a fixed destination
+- mode: 0 to remove all route pairs with common bidirectional nodes, 1 to remove route pairs with any common node, 2 to include all possible route pairs
+- report_format: 0 for direction bits, 1 for direction chars, 2 for node/router IDs
 
-P1 = S1-->D and P2 = S2-->D should have equal number of hops 
+To modify the bits corresponding to directions, open cmd, and look for the string "SET DIRECTION BITS HERE".
 
-S1 and S2 should at least be one hop apart 
+The following reports are generated and then dumped in 'reports' directory inside the current working directory:
+1. A detailed report (file name starts with "NoC_") that consists of all possible S-D pairs or S1-S2-D triplets, hops, route pairs, etc.
+2. A summary (file name starts with "summary_") of stats like the total number of route pairs obtained, maximum/minimum possible hops, etc.
 
-1. Find all the possible pairs (P1, P2) 
-2. Sort these pairs according to the number of hops 
-
-
-To do:
-
-CONSTRAINTS
-1. Limit the minimum number of hops allowed for path pairs
-2. Limit the maximum number of hops allowed for path pairs
-3. Do not include those path pairs that cross the same node simultaneously
-
-MISCELLANEOUS
-1. Create a separate python script file and a python functions file
-2. Create a shell script where the following parameters can be set for the python script before calling it
-  * Generate results upto "n" rows and columns? (y/n)
-    - If "y": n = ___
-    - If "n": 
-      * Number of rows = ___
-      * Number of columns = ___
-  * Limit the mimimum number of hops? (y/n)
-    - Minimum number of hops
-  * Limit the maximum number of hops (y/n)
-    - Maximum number of hops
-  * Exclude overlapping paths? (y/n)
-  Results and Summary are dumped in the NoC directory.
-3. Include the following in the report:
-  * A summary of user inputs:
-    - Number of rows
-    - Number of columns
-    - Minimum number of hops (can be NA)
-    - Maximum number of hops (can be NA)
-    - Overlapping paths excluded? (YES or NO)
-  * A summary of statisics:
-    Use the generated report for calculating these stats and then dump them to another summary file. For an mXn mesh network, find the: 
-      - Longest path in hops
-      - Shortest path in hops
-      - Maximum path pairs of the same length 
-        - The number of hops
-        - The triplet and the number of pairs
-        - The triplet and the number of pairs ...
-      - Minimum path pairs of the same length
-        - The number of hops
-        - The triplet and the number of pairs
-        - The triplet and the number of pairs ...
+The following strings are appended to the file name depending on the four cmd variables:
+- NxN: N is the first argument, i.e., the number of rows/columns in the mesh
+- nothing is appended if num_sources = 1
+- S2: the number of sources is 2
+- nothing is appended is mode = 0, i.e., only those route pairs which contain common bidirectiona; nodes are removed
+- nooverlap: mode = 1, i.e., all route pairs that contain at least one common node are removed
+- withoverlap: mode = 0, i.e., all possible route pairs are included regardless of overlap
+- nothing is appended if report_format = 0, i.e., when route information is required in bits
+- directions: report_format = 1, i.e., routes are reported as a sequence of direction characters like 'N', 'S', 'W', 'E'
+- routers: report_format = 2, i.e., routes are reported as a sequence of node/router IDs
+For example, ./cmd 2 2 2 1 generates report NoC_2x2_S2_withoverlap_directions.rpt, while ./cmd 3 1 0 0 generates NoC_3x3.rpt.

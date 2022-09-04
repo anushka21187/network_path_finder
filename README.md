@@ -1,6 +1,7 @@
 # network_path_finder
 
-Command: ./cmd <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2> /par
+Command: ./cmd <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2> 
+
 (Might need to run "chmod -R 777 ./" once after cloning this repo and entering the network_path_finder directory.)
 
 - square_mesh_dimension: number of rows/columns in the mesh; cannot be less than 2

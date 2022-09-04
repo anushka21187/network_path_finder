@@ -13,6 +13,7 @@ The following reports are generated and then dumped in 'reports' directory insid
 1. A detailed report (file name starts with "NoC_") that consists of all possible S-D pairs or S1-S2-D triplets, hops, route pairs, etc.
 2. A summary (file name starts with "summary_") of stats like the total number of route pairs obtained, maximum/minimum possible hops, etc.
 
+
 The following strings are appended to the file name depending on the four cmd variables:
 - NxN: N is the first argument, i.e., the number of rows/columns in the mesh
 - nothing is appended if num_sources = 1
@@ -23,4 +24,5 @@ The following strings are appended to the file name depending on the four cmd va
 - nothing is appended if report_format = 0, i.e., when route information is required in bits
 - directions: report_format = 1, i.e., routes are reported as a sequence of direction characters like 'N', 'S', 'W', 'E'
 - routers: report_format = 2, i.e., routes are reported as a sequence of node/router IDs
+
 For example, ./cmd 2 2 2 1 generates report NoC_2x2_S2_withoverlap_directions.rpt, while ./cmd 3 1 0 0 generates NoC_3x3.rpt.

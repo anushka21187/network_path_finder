@@ -1,18 +1,38 @@
-import network_matrix
-import available_ports
-import obtain_paths
+# ---------- 6 ---------- #
+""" MAIN SCRIPT """
+import os
 
-# 2x3 matrix
-number_of_rows = 3
-number_of_columns = 3
+from helpers import *
+from common import *
+from routepairs import *
+from reportformat import *
+from generate import *
 
 source = 0
-destination = 2
+"""
+SET DIRECTION BITS HERE
+"""
+north = 'northbits'
+south = 'southbits'
+west = 'westbits'
+east = 'eastbits'
+"""
+END OF DIRECTION BITS. Do not modify any other part of this script.
+"""
 
-mesh = network_matrix(number_of_rows, number_of_columns)
-port_map_mesh = available_ports('mesh', mesh)
-#port_map_torus = available_ports('torus', mesh)
 
-source_directions = port_map_mesh[source]
+mesh_size_var = anushka_1
+num_sources_var = anushka_s
+mode_var = anushka_m
+report_format_var = anushka_rf
 
-dictionary_of_paths = obtain_paths(port_map_mesh, number_of_rows, number_of_columns, source, destination, [], source_directions, {})
+
+if 'reports' not in os.listdir():
+    os.mkdir('reports')
+
+
+if num_sources_var == 2:
+    generate_routepairs_s2(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
+else:
+    generate_routepairs(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
+    

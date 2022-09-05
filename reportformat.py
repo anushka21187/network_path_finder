@@ -4,7 +4,7 @@
 """
 defaults: num_sources = 1, mode = 0, report_format = 0
 
-For report_format = 2, i.e., to get routes in terms of router/node IDs, call any relevant funtion from routepairs.py.
+For report_format = 2, i.e., to get routes in terms of router/node IDs, call any relevant function from routepairs.py.
 
 routes_in_directions
 routes_in_directions_s2

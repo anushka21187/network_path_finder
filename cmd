@@ -28,7 +28,7 @@ endif
 
 # 3. mode (optional); 0 (or unspecified) --> no common node, 1 --> nodes common but not bidirectional, 2 --> nodes can be common
 if (($3 < 0) || ($3 > 2)) then
-	echo "Error_3: valid modes are 0 (partial overlap: route pairs with bidirectional common nodes removed; default), 1 (no overlap: route pairs with any common node removed), 2 (no common node removed)."
+	echo "Error_3: valid modes are 0 (partial overlap: route pairs with bidirectional common nodes removed), 1 (no overlap: route pairs with any common node removed), 2 (no common node removed)."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources> <mode=0or1or2>"
 	exit()
@@ -48,7 +48,7 @@ endif
 
 # 4. report format (optional); 0 --> bitstring, 1 --> directions, 2 --> router/node IDs
 if (($4 < 0) || ($4 > 2)) then
-	echo "Error_4: valid report formats are 0 (bits; default), 1 (directions), 2 (router/node IDs)."
+	echo "Error_4: valid report formats are 0 (bits), 1 (directions), 2 (router/node IDs)."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
 	exit()

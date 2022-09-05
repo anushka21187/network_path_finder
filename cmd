@@ -9,7 +9,7 @@ if ($1 < 2) then
 	exit()
 endif
 
-# 2. number of sources (optional); 1 (default) or 2
+# 2. number of sources; 1 (default) or 2
 if (($2 != 1) && ($2 != 2)) then
 	echo "Error_2: Number of sources must be either 1 or 2."
 	echo "Usage: "
@@ -26,7 +26,7 @@ else
 	set s_string = "" 
 endif
 
-# 3. mode (optional); 0 (or unspecified) --> no common node, 1 --> nodes common but not bidirectional, 2 --> nodes can be common
+# 3. mode; 0 (default) --> nodes common but not bidirectional, 1 --> no common node, 2 --> nodes can be common
 if (($3 < 0) || ($3 > 2)) then
 	echo "Error_3: valid modes are 0 (partial overlap: route pairs with bidirectional common nodes removed), 1 (no overlap: route pairs with any common node removed), 2 (no common node removed)."
 	echo "Usage: "
@@ -46,7 +46,7 @@ else
 	set m_string = ""
 endif
 
-# 4. report format (optional); 0 --> bitstring, 1 --> directions, 2 --> router/node IDs
+# 4. report format; 0 (default) --> bitstring, 1 --> directions, 2 --> router/node IDs
 if (($4 < 0) || ($4 > 2)) then
 	echo "Error_4: valid report formats are 0 (bits), 1 (directions), 2 (router/node IDs)."
 	echo "Usage: "

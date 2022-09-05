@@ -1,13 +1,34 @@
 # network_path_finder
 
-Command: ./cmd <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2> 
+INSTALLATION:
+
+Directory --> any
+
+Command --> git clone https://github.com/anushka21187/network_path_finder/edit/main/README.md
+
+
+UPDATE:
+
+Directory --> any/network_path_finder 
+
+Command --> git pull origin main
+
+
+COMMAND DESCRIPTION:
+
+Directory --> any/network_path_finder
 
 (Might need to run "chmod -R 777 ./" once after cloning this repo and entering the network_path_finder directory.)
+
+Command: ./cmd <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2> 
 
 - square_mesh_dimension: number of rows/columns in the mesh; cannot be less than 2
 - num_sources: 1 for route pairs between one source and a fixed destination, 2 for the same between two different sources and a fixed destination
 - mode: 0 to remove all route pairs with common bidirectional nodes, 1 to remove route pairs with any common node, 2 to include all possible route pairs
 - report_format: 0 for direction bits, 1 for direction chars, 2 for node/router IDs
+
+
+MISCELLANEOUS INFO:
 
 To modify the bits corresponding to directions, open cmd, and look for the string "SET DIRECTION BITS HERE".
 

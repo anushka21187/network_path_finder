@@ -2,17 +2,17 @@
 """ HELPERS """
 
 """
-1. make_source: Sets the global source variable to the one used in obtain_paths 
-2. number_of_path_pairs: Given a dictionary with key = hops, and value = a list of path pairs, returns a dictionary with key = hops, and value = number of path pairs
-3. exchange_key_value: Given a dictionary with key = in_key, and value = in_value, returns a dictionary with key = in_value, and value = in_key
-4. path_in_directions: Given a tuple of router IDs, returns a tuple of directions
+#0. make_source: Sets the global source variable to the one used in obtain_paths 
+1. number_of_path_pairs: Given a dictionary with key = hops, and value = a list of path pairs, returns a dictionary with key = hops, and value = number of path pairs
+2. exchange_key_value: Given a dictionary with key = in_key, and value = in_value, returns a dictionary with key = in_value, and value = in_key
+3. path_in_directions: Given a tuple of router IDs, returns a tuple of directions
 """ 
 
-
+"""
 def make_source(router_id):
     global source
     source = router_id
-
+"""
 
 
 

@@ -43,7 +43,7 @@ The following strings are appended to the file name depending on the four cmd va
 * *NxN*: *N* is replaced by the first argument, i.e., the number of rows/columns in the mesh
 * _S2_: the number of sources is 2
 * _nooverlap_: mode = 1, i.e., all route pairs that contain at least one common node are removed
-* _withoverlap_: mode = 0, i.e., all possible route pairs are included regardless of overlap
+* _withoverlap_: mode = 2, i.e., all possible route pairs are included regardless of overlap
 * _directions_: report_format = 1, i.e., routes are reported as a sequence of comma-separated direction characters *N*, *S*, *W*, *E*
 * _routers_: report_format = 2, i.e., routes are reported as a sequence of comma-separated node/router IDs
 * Nothing is appended if:

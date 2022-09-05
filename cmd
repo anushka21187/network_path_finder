@@ -48,7 +48,7 @@ endif
 
 # 4. report format (optional); 0 --> bitstring, 1 --> directions, 2 --> router/node IDs
 if (($4 < 0) || ($4 > 2)) then
-	echo "Error_3: valid report formats are 0 (bits; default), 1 (directions), 2 (router/node IDs)."
+	echo "Error_4: valid report formats are 0 (bits; default), 1 (directions), 2 (router/node IDs)."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
 	exit()

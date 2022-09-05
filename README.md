@@ -43,4 +43,4 @@ The following strings are appended to the file name depending on the four cmd va
   * mode = 0, i.e., only those route pairs which contain common bidirectional nodes are removed
   * report_format = 0, i.e., when route information is reported in bits
   
-For example, `./cmd 2 2 2 1` generates report *NoC_2x2_S2_withoverlap_directions.rpt*, while `./cmd 3 1 0 0` generates *NoC_3x3.rpt*.
+* For example, `./cmd 2 2 2 1` generates report *NoC_2x2_S2_withoverlap_directions.rpt*, while `./cmd 3 1 0 0` generates *NoC_3x3.rpt*.

@@ -1,16 +1,16 @@
 # network_path_finder
 
-## INSTALLATION:
+## Installation
 
 *any*> `git clone https://github.com/anushka21187/network_path_finder/edit/main/README.md`
 
 
-## UPDATE:
-<p>
-*any/network_path_finder*> `git pull origin main`
-</p>
+## Update
 
-## COMMAND DESCRIPTION:
+*any/network_path_finder*> `git pull origin main`
+
+
+## Command description
 
 (Might need to run `chmod -R 777 ./` in *any/network_path_finder* directory once after installation.)
 
@@ -22,7 +22,7 @@
 * *report_format*: 0 for direction bits, 1 for direction chars, 2 for node/router IDs
 
 
-## MISCELLANEOUS INFO:
+## Miscellaneous info
 
 To modify the bits corresponding to directions, open cmd, and look for the string *SET DIRECTION BITS HERE*.
 

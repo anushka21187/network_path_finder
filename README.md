@@ -6,9 +6,9 @@
 
 
 ## UPDATE:
-'''
+<p>
 *any/network_path_finder*> `git pull origin main`
-'''
+</p>
 
 ## COMMAND DESCRIPTION:
 

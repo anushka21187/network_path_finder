@@ -38,7 +38,7 @@ The following strings are appended to the file name depending on the four cmd va
 * _withoverlap_: mode = 0, i.e., all possible route pairs are included regardless of overlap
 * _directions_: report_format = 1, i.e., routes are reported as a sequence of comma-separated direction characters *N*, *S*, *W*, *E*
 * _routers_: report_format = 2, i.e., routes are reported as a sequence of comma-separated node/router IDs
-* nothing is appended if:
+* Nothing is appended if:
   * num_sources = 1, i.e., the number of sources is 1
   * mode = 0, i.e., only those route pairs which contain common bidirectional nodes are removed
   * report_format = 0, i.e., when route information is reported in bits

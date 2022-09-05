@@ -29,12 +29,15 @@ Required packages: python, csh
 
 ## Miscellaneous info
 
-To modify the bits corresponding to directions, open cmd, and look for the string *SET DIRECTION BITS HERE*.
+### Modifying direction bits
+
+Open cmd, look for the string *SET DIRECTION BITS HERE*, and make the required modifications.
+
+### The output reports
 
 The following reports are generated and then dumped in *any/network_path_finder/reports* directory:
 1. A detailed report (file name starts with *NoC_*) that consists of all possible S-D pairs or S1-S2-D triplets, hops, route pairs, etc.
 2. A summary (file name starts with *summary_*) of stats like the total number of route pairs obtained, maximum/minimum possible hops, etc.
-
 
 The following strings are appended to the file name depending on the four cmd variables:
 * *NxN*: *N* is replaced by the first argument, i.e., the number of rows/columns in the mesh

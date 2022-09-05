@@ -2,7 +2,7 @@
 
 ## Installation
 
-*any*> `git clone https://github.com/anushka21187/network_path_finder/edit/main/README.md`
+*any*> `git clone https://github.com/anushka21187/network_path_finder`
 
 
 ## Update

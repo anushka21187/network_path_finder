@@ -107,7 +107,6 @@ else if ($4 == 2) then
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif
-echo "" 
 
 
 python $temp_py_script 

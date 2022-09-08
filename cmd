@@ -113,7 +113,7 @@ endif
 #echo "" 
 
 
-python $temp_py_script 
+python3 $temp_py_script 
 
 
 set report = reports/NoC_$1x$1$s_string$m_string$rf_string.rpt

@@ -27,6 +27,9 @@ if 'reports' not in os.listdir():
 
 if num_sources_var == 2:
     generate_routepairs_s2(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
-else:
+elif num_sources_var == 1:
     generate_routepairs(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
+else:
+    generate_routepairs_s2all(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
+
     

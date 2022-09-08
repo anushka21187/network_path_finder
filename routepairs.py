@@ -106,6 +106,19 @@ def hops_and_route_pairs_s2(r, c, s1, s2, d):
     
     
 
+
+# num_sources = 0, mode = 2
+def hops_and_route_pairs_s2all(r, c, s1, s2, d):
+    
+    if s1 != s2:
+        return hops_and_route_pairs(r, c, s1, s2, d)
+    else:
+        return hops_and_route_pairs(r, c, s1, d)
+
+
+
+
+
 # num_sources = 1, mode = 1    
 def remove_all_overlaps(r, c, s, d):
     pair_dict = hops_and_route_pairs(r, c, s, d)
@@ -201,6 +214,17 @@ def remove_all_overlaps_s2(r, c, s1, s2, d):
                 new_pair_dict[hop] = newpairslist
             
     return new_pair_dict
+
+
+
+
+
+# num_sources = 0, mode = 1
+def remove_all_overlaps_s2all(r, c, s1, s2, d):
+    if s1 != s2:
+        return remove_all_overlaps(r, c, s1, s2, d)
+    else:
+        return remove_all_overlaps(r, c, s1, d)
 
 
 
@@ -319,3 +343,15 @@ def remove_overlapping_paths_s2(r, c, s1, s2, d):
                 new_pair_dict[hop] = newpairslist
             
     return new_pair_dict
+
+
+
+
+
+# num_sources = 0, mode = 0    
+def remove_overlapping_paths_s2all(r, c, s1, s2, d):
+    if s1 != s2:
+        return remove_overlapping_paths_s2(r, c, s1, s2, d)
+    else:
+        return remove_overlapping_paths(r, c, s1, d) 
+

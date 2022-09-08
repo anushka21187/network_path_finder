@@ -91,7 +91,7 @@ perl -p -i -e 's/anushka_m/'$mode'/gi;' $temp_py_script
 perl -p -i -e 's/anushka_rf/'$report_format'/gi;' $temp_py_script
 
 echo "Finding routes for $1x$1 Mesh..."
-if (($2 == 2) || ($2==0)) then
+if (($2 == 2) || ($2 == 0)) then
 	echo "Pairing routes from 2 different sources to one destination..."
 else
 	echo "Pairing different routes from $2 source to one destination..."
@@ -113,7 +113,7 @@ endif
 #echo "" 
 
 
-python3 $temp_py_script 
+python $temp_py_script 
 
 
 set report = reports/NoC_$1x$1$s_string$m_string$rf_string.rpt

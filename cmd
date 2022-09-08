@@ -10,7 +10,7 @@ if ($1 < 2) then
 endif
 
 # 2. number of sources; 1 (default) or 2
-if (($2 != 1) && ($2 != 2)) then
+if (($2 != 1) && ($2 != 2) && ($2 != 0)) then
 	echo "Error_2: Number of sources must be either 1 or 2."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources=1or2>"
@@ -21,6 +21,9 @@ else if ($2 == 1) then
 else if ($2 == 2) then
 	set num_sources = $2
 	set s_string = "_2S"
+else if ($2 == 0) then 
+	set num_sources = $2
+	set s_string = "_2S-all"
 else
 	set num_sources = 1
 	set s_string = "" 
@@ -88,8 +91,8 @@ perl -p -i -e 's/anushka_m/'$mode'/gi;' $temp_py_script
 perl -p -i -e 's/anushka_rf/'$report_format'/gi;' $temp_py_script
 
 echo "Finding routes for $1x$1 Mesh..."
-if ($2 == 2) then
-	echo "Pairing routes from $2 different sources to one destination..."
+if (($2 == 2) || ($2==0)) then
+	echo "Pairing routes from 2 different sources to one destination..."
 else
 	echo "Pairing different routes from $2 source to one destination..."
 endif
@@ -107,6 +110,7 @@ else if ($4 == 2) then
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif
+#echo "" 
 
 
 python $temp_py_script 

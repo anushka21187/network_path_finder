@@ -49,12 +49,15 @@ else
 	set m_string = ""
 endif
 
-# 4. report format; 0 (default) --> bitstring, 1 --> directions, 2 --> router/node IDs
-if (($4 < 0) || ($4 > 2)) then
+# 4. report format; 0 (default) --> bitstring, 3 --> CONCISE (bits), 1 --> directions, 2 --> router/node IDs
+if (($4 < 0) || ($4 > 3)) then
 	echo "Error_4: valid report formats are 0 (bits), 1 (directions), 2 (router/node IDs)."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
 	exit()
+else if ($4 == 3) then
+	set report_format = $4
+	set rf_string = "_concise"
 else if ($4 == 0) then
 	set report_format = $4
 	set rf_string = ""
@@ -107,6 +110,8 @@ if ($4 == 1) then
 	echo "Reporting paths as sequences of directions..."
 else if ($4 == 2) then
 	echo "Reporting paths as sequences of router/node IDs..."
+else if ($4 == 3) then
+	echo "Creating a concise report of paths as sequences of <current_nodeID>:<direction_to_take_inbits>..."
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif
@@ -123,15 +128,21 @@ set summary = reports/summary_$1x$1$s_string$m_string$rf_string.rpt
 set report_location = `readlink -f $report`
 echo "All the Routes and Associated Source-Destinations are in : $report_location"
 
-echo "For $1x$1 mesh, total number of path pairs: " > $summary 
-grep -iP "pair_" $report | wc -l >> $summary 
-echo "" >> $summary 
-echo "All possible unique hops: " >> $summary 
-grep -iP "(minimum|maximum) hops" $report | sort -u -gk4 >> $summary 
-echo "" >> $summary 
-echo "Maximum and minimum possible hops in $1x$1 mesh: " >> $summary
-grep -iP "maximum hops" $report | sort -u -gk4 | tail -1 >> $summary  
-grep -iP "minimum hops" $report | sort -u -gk4 | head -1 >> $summary 
+if ($4 != 3) then
+	echo "For $1x$1 mesh, total number of path pairs: " > $summary 
+	grep -iP "pair_" $report | wc -l >> $summary 
+	echo "" >> $summary 
+	echo "All possible unique hops: " >> $summary 
+	grep -iP "(minimum|maximum) hops" $report | sort -u -gk4 >> $summary 
+	echo "" >> $summary 
+	echo "Maximum and minimum possible hops in $1x$1 mesh: " >> $summary
+	grep -iP "maximum hops" $report | sort -u -gk4 | tail -1 >> $summary  
+	grep -iP "minimum hops" $report | sort -u -gk4 | head -1 >> $summary 
+else
+	echo "For $1x$1 mesh, total number of path pairs: " > $summary 
+	grep -iP " = " $report | wc -l >> $summary 
+	echo "" >> $summary 
+endif
 
 set summary_location = `readlink -f $summary`
 echo "Summary of results is in : $summary_location"

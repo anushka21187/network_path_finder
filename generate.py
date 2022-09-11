@@ -228,7 +228,10 @@ def generate_routepairs_s2(r, c, m_var, r_var, north_var, south_var, west_var, e
                         
     with open(filename, "a") as f2:
         f2.write("----- END ----- \n")
-        
+
+
+
+
 
 # num_sources = 0
 def generate_routepairs_s2all(r, c, m_var, r_var, north_var, south_var, west_var, east_var):
@@ -338,5 +341,260 @@ def generate_routepairs_s2all(r, c, m_var, r_var, north_var, south_var, west_var
                         
     with open(filename, "a") as f2:
         f2.write("----- END ----- \n")
-         
+
+
+
+
+
+
+# report_format = 3
+# num_sources = 1
+def generate_routepairs_concise(r, c, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+
+    file_extension = ".rpt"
+    
+    
+    if m_var == 2: 
+        m_string = '_withoverlap'
+    elif m_var == 1:
+        m_string = '_nooverlap'
+    else:
+        m_string = ''
+    
+    file_name = "NoC_" + str(r) + "x" + str(c) + m_string + "_concise" + file_extension
+    filename = os.path.join('reports', file_name)
+    
+    
+    with open(filename, "w") as f0:
+        f0.write("----- START ----- \n") 
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j])
+            
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s = routers[y]
+                
+                hops_pairs_dict = routes_in_bits(r, c, s, d, m_var, north_var, south_var, west_var, east_var)
+                if m_var == 2:
+                    reference_dict = hops_and_route_pairs(r, c, s, d)
+                elif m_var == 1:
+                    reference_dict = remove_all_overlaps(r, c, s, d)
+                else:
+                    reference_dict = remove_overlapping_paths(r, c, s, d)
+                
+                if len(hops_pairs_dict) != 0:
+                    number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                    hops_list = list(number_of_pairs_perhop.keys()) 
+                    
+                    with open(filename, "a") as f1: 
+                        
+                        for index1 in range(0, len(hops_pairs_dict)):
+                            key = hops_list[index1]
+                            
+                            f1.write(str(s)+"_"+str(d)+"_hop"+str(key)+" = ")
+                            
+                            value = hops_pairs_dict[key]
+                            ref_value = reference_dict[key]
+                            
+                            for index2 in range(0, len(value)): 
+                                pair = value[index2]
+                                ref_pair = ref_value[index2]
+                                
+                                for path_index in range(0, 2):
+                                    path_frompair = pair[path_index]
+                                    ref_path_frompair = ref_pair[path_index]
+                                    new_path = []
+
+                                    for bit_index in range(0, len(path_frompair), 2):
+                                        if bit_index == 0:
+                                            f1.write("(")
+                                        f1.write(str(ref_path_frompair[int(bit_index/2)])+":"+str(path_frompair[bit_index])+str(path_frompair[bit_index+1]))
+                                        f1.write(", ")
+                                    f1.write(str(d)+":00)")
+                                    
+                                    if path_index==0:
+                                        f1.write(", ")
+                                    else:
+                                        f1.write(" \n")                                
+
+    with open(filename, "a") as f2:
+        f2.write("----- END ----- \n") 
+
+
+
+# num_sources = 2
+def generate_routepairs_concise_s2(r, c, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+
+    file_extension = ".rpt"
+    
+    
+    if m_var == 2: 
+        m_string = '_withoverlap'
+    elif m_var == 1:
+        m_string = '_nooverlap'
+    else:
+        m_string = ''
+    
+    file_name = "NoC_" + str(r) + "x" + str(c) + "_2S" + m_string + "_concise" + file_extension
+    filename = os.path.join('reports', file_name)
+    
+    
+    with open(filename, "w") as f0:
+        f0.write("----- START ----- \n") 
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j])
+            
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s1 = routers[y]
+                for k in range(0, len(routers)):
+                    if routers[k] != d and routers[k] > s1: 
+                        s2 = routers[k]
+                
+                        hops_pairs_dict = routes_in_bits_s2(r, c, s1, s2, d, m_var, north_var, south_var, west_var, east_var)
+                        if m_var == 2:
+                            reference_dict = hops_and_route_pairs_s2(r, c, s1, s2, d)
+                        elif m_var == 1:
+                            reference_dict = remove_all_overlaps_s2(r, c, s1, s2, d)
+                        else:
+                            reference_dict = remove_overlapping_paths_s2(r, c, s1, s2, d)
+                        
+                        if len(hops_pairs_dict) != 0:
+                            number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                            hops_list = list(number_of_pairs_perhop.keys()) 
+                            
+                            with open(filename, "a") as f1: 
+                                
+                                for index1 in range(0, len(hops_pairs_dict)):
+                                    key = hops_list[index1]
+                                    
+                                    f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
+                                    
+                                    value = hops_pairs_dict[key]
+                                    ref_value = reference_dict[key]
+                                    
+                                    for index2 in range(0, len(value)): 
+                                        pair = value[index2]
+                                        ref_pair = ref_value[index2]
+                                        
+                                        for path_index in range(0, 2):
+                                            path_frompair = pair[path_index]
+                                            ref_path_frompair = ref_pair[path_index]
+                                            new_path = []
+                                            for bit_index in range(0, len(path_frompair), 2):
+                                                if bit_index == 0:
+                                                    f1.write("(")
+                                                f1.write(str(ref_path_frompair[int(bit_index/2)])+":"+str(path_frompair[bit_index])+str(path_frompair[bit_index+1]))
+                                                f1.write(", ")
+                                            f1.write(str(d)+":00)")
+                                    
+                                            if path_index==0:
+                                                f1.write(", ")
+                                            else:
+                                                f1.write(" \n")                               
+
+    with open(filename, "a") as f2:
+        f2.write("----- END ----- \n")
         
+
+
+        
+# num_sources = 0
+def generate_routepairs_concise_s2all(r, c, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+
+    file_extension = ".rpt"
+    
+    
+    if m_var == 2: 
+        m_string = '_withoverlap'
+    elif m_var == 1:
+        m_string = '_nooverlap'
+    else:
+        m_string = ''
+    
+    file_name = "NoC_" + str(r) + "x" + str(c) + "_2S-all" + m_string + "_concise" + file_extension
+    filename = os.path.join('reports', file_name)
+    
+    
+    with open(filename, "w") as f0:
+        f0.write("----- START ----- \n") 
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j])
+            
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s1 = routers[y]
+                for k in range(0, len(routers)):
+                    if routers[k] != d and routers[k] >= s1: 
+                        s2 = routers[k]
+                
+                        hops_pairs_dict = routes_in_bits_s2all(r, c, s1, s2, d, m_var, north_var, south_var, west_var, east_var)
+                        if m_var == 2:
+                            reference_dict = hops_and_route_pairs_s2all(r, c, s1, s2, d)
+                        elif m_var == 1:
+                            reference_dict = remove_all_overlaps_s2all(r, c, s1, s2, d)
+                        else:
+                            reference_dict = remove_overlapping_paths_s2all(r, c, s1, s2, d)
+                        
+                        if len(hops_pairs_dict) != 0:
+                            number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                            hops_list = list(number_of_pairs_perhop.keys()) 
+                            
+                            with open(filename, "a") as f1: 
+                                
+                                for index1 in range(0, len(hops_pairs_dict)):
+                                    key = hops_list[index1]
+                                    
+                                    f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
+                                    
+                                    value = hops_pairs_dict[key]
+                                    ref_value = reference_dict[key]
+                                    
+                                    for index2 in range(0, len(value)): 
+                                        pair = value[index2]
+                                        ref_pair = ref_value[index2]
+                                        
+                                        for path_index in range(0, 2):
+                                            path_frompair = pair[path_index]
+                                            ref_path_frompair = ref_pair[path_index]
+                                            new_path = []
+                                            for bit_index in range(0, len(path_frompair), 2):
+                                                if bit_index == 0:
+                                                    f1.write("(")
+                                                f1.write(str(ref_path_frompair[int(bit_index/2)])+":"+str(path_frompair[bit_index])+str(path_frompair[bit_index+1]))
+                                                f1.write(", ")
+                                            f1.write(str(d)+":00)")
+                                    
+                                            if path_index==0:
+                                                f1.write(", ")
+                                            else:
+                                                f1.write(" \n")                               
+
+                                
+    with open(filename, "a") as f2:
+        f2.write("----- END ----- \n") 
+

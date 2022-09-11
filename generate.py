@@ -397,17 +397,17 @@ def generate_routepairs_concise(r, c, m_var, north_var, south_var, west_var, eas
                     with open(filename, "a") as f1: 
                         
                         for index1 in range(0, len(hops_pairs_dict)):
-                            key = hops_list[index1]
-                            
-                            f1.write(str(s)+"_"+str(d)+"_hop"+str(key)+" = ")
-                            
+                            key = hops_list[index1]                         
+                                                        
                             value = hops_pairs_dict[key]
                             ref_value = reference_dict[key]
                             
                             for index2 in range(0, len(value)): 
                                 pair = value[index2]
                                 ref_pair = ref_value[index2]
-                                
+                               
+                                f1.write(str(s)+"_"+str(d)+"_hop"+str(key)+" = ")
+ 
                                 for path_index in range(0, 2):
                                     path_frompair = pair[path_index]
                                     ref_path_frompair = ref_pair[path_index]
@@ -484,15 +484,15 @@ def generate_routepairs_concise_s2(r, c, m_var, north_var, south_var, west_var, 
                                 for index1 in range(0, len(hops_pairs_dict)):
                                     key = hops_list[index1]
                                     
-                                    f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
-                                    
                                     value = hops_pairs_dict[key]
                                     ref_value = reference_dict[key]
                                     
                                     for index2 in range(0, len(value)): 
                                         pair = value[index2]
                                         ref_pair = ref_value[index2]
-                                        
+
+                                        f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
+
                                         for path_index in range(0, 2):
                                             path_frompair = pair[path_index]
                                             ref_path_frompair = ref_pair[path_index]
@@ -569,15 +569,15 @@ def generate_routepairs_concise_s2all(r, c, m_var, north_var, south_var, west_va
                                 for index1 in range(0, len(hops_pairs_dict)):
                                     key = hops_list[index1]
                                     
-                                    f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
-                                    
                                     value = hops_pairs_dict[key]
                                     ref_value = reference_dict[key]
                                     
                                     for index2 in range(0, len(value)): 
                                         pair = value[index2]
                                         ref_pair = ref_value[index2]
-                                        
+
+                                        f1.write(str(s1)+"_"+str(s2)+"_"+str(d)+"_hop"+str(key)+" = ")
+
                                         for path_index in range(0, 2):
                                             path_frompair = pair[path_index]
                                             ref_path_frompair = ref_pair[path_index]
@@ -598,3 +598,5 @@ def generate_routepairs_concise_s2all(r, c, m_var, north_var, south_var, west_va
     with open(filename, "a") as f2:
         f2.write("----- END ----- \n") 
 
+
+      

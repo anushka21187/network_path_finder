@@ -1,5 +1,5 @@
 #!/bin/csh -f
-#echo $0 $1 $2 $3 
+#echo $1 $2 $3 $4 
 
 # 1. square mesh dimensions; 2 or more
 if ($1 < 2) then
@@ -94,8 +94,10 @@ perl -p -i -e 's/anushka_m/'$mode'/gi;' $temp_py_script
 perl -p -i -e 's/anushka_rf/'$report_format'/gi;' $temp_py_script
 
 echo "Finding routes for $1x$1 Mesh..."
-if (($2 == 2) || ($2 == 0)) then
+if ($2 == 2) then
 	echo "Pairing routes from 2 different sources to one destination..."
+else if ($2 == 0) then
+	echo "Pairing routes from 2 sources (can be identical) to one destination..."
 else
 	echo "Pairing different routes from $2 source to one destination..."
 endif
@@ -111,7 +113,7 @@ if ($4 == 1) then
 else if ($4 == 2) then
 	echo "Reporting paths as sequences of router/node IDs..."
 else if ($4 == 3) then
-	echo "Creating a concise report of paths as sequences of <current_nodeID>:<direction_to_take_inbits>..."
+	echo "Making a concise report of paths as sequences of <current_nodeID>:<direction_to_take_inbits>..."
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif

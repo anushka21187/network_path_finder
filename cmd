@@ -118,14 +118,14 @@ else if ($4 == 2) then
 else if ($4 == 3) then
 	echo "Making a concise report of paths as sequences of <current_nodeID>:<direction_to_take_inbits>..."
 else if ($4 == 4) then
-	echo "Generating spice scripts..."
+	echo "Generating spice files..."
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif
 #echo "" 
 
 
-python $temp_py_script 
+python3 $temp_py_script 
 
 
 if ($4 == 3) then

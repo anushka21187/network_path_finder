@@ -21,10 +21,16 @@ mode_var = anushka_m
 report_format_var = anushka_rf
 
 
-
 if report_format_var == 4:
-    if 'stimuli_'+'anushka_1'+'x'+'anushka_1'+'_s'+'anushka_s'+'_m'+'anushka_m' not in os.listdir():
-        os.mkdir('stimuli_'+'anushka_1'+'x'+'anushka_1'+'_s'+'anushka_s'+'_m'+'anushka_m')
+    if sources_var==1:
+        if 'stimuli_'+'anushka_1'+'x'+'anushka_1'+'_m'+'anushka_m' not in os.listdir():
+            os.mkdir('stimuli_'+'anushka_1'+'x'+'anushka_1'+'_m'+'anushka_m')
+    elif sources_var==2:
+        if 'stimuli_'+'anushka_1'+'x'+'anushka_1'+'_2S'+'_m'+'anushka_m' not in os.listdir():
+            os.mkdir('stimuli_'+'anushka_1'+'x'+'anushka_1'+'_2S'+'_m'+'anushka_m')
+    else:
+        if 'stimuli_'+'anushka_1'+'x'+'anushka_1'+'_2S-all'+'_m'+'anushka_m' not in os.listdir():
+            os.mkdir('stimuli_'+'anushka_1'+'x'+'anushka_1'+'_2S-all'+'_m'+'anushka_m')
 else:
     if 'reports' not in os.listdir():
         os.mkdir('reports')
@@ -54,4 +60,4 @@ else:
         generate_routepairs_concise_s2all(anushka_1, anushka_1, mode_var, north, south, west, east)
     else:
         generate_routepairs_s2all(anushka_1, anushka_1, mode_var, report_format_var, north, south, west, east)
-
+        

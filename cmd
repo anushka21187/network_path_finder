@@ -50,7 +50,7 @@ else
 endif
 
 # 4. report format; 0 (default) --> bitstring, 3 --> CONCISE (bits), 1 --> directions, 2 --> router/node IDs
-if (($4 < 0) || ($4 > 3)) then
+if (($4 < 0) || ($4 > 4)) then
 	echo "Error_4: valid report formats are 0 (bits), 1 (directions), 2 (router/node IDs)."
 	echo "Usage: "
 	echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
@@ -58,6 +58,9 @@ if (($4 < 0) || ($4 > 3)) then
 else if ($4 == 3) then
 	set report_format = $4
 	set rf_string = "_concise"
+else if ($4 == 4) then
+	set report_format = $4
+	set rf_string = "_stimuli"
 else if ($4 == 0) then
 	set report_format = $4
 	set rf_string = ""
@@ -81,9 +84,9 @@ cp $py_script $temp_py_script
 
 # ----- SET DIRECTION BITS HERE -----
 perl -p -i -e 's/northbits/00/gi;' $temp_py_script
-perl -p -i -e 's/southbits/01/gi;' $temp_py_script
+perl -p -i -e 's/southbits/11/gi;' $temp_py_script
 perl -p -i -e 's/westbits/10/gi;' $temp_py_script
-perl -p -i -e 's/eastbits/11/gi;' $temp_py_script
+perl -p -i -e 's/eastbits/01/gi;' $temp_py_script
 # ----
 
 
@@ -114,6 +117,8 @@ else if ($4 == 2) then
 	echo "Reporting paths as sequences of router/node IDs..."
 else if ($4 == 3) then
 	echo "Making a concise report of paths as sequences of <current_nodeID>:<direction_to_take_inbits>..."
+else if ($4 == 4) then
+	echo "Generating spice scripts..."
 else
 	echo "Reporting paths as sequences of direction bits..."
 endif
@@ -123,14 +128,28 @@ endif
 python $temp_py_script 
 
 
-set report = reports/NoC_$1x$1$s_string$m_string$rf_string.rpt
-set summary = reports/summary_$1x$1$s_string$m_string$rf_string.rpt
-
-
-set report_location = `readlink -f $report`
-echo "All the Routes and Associated Source-Destinations are in : $report_location"
-
-if ($4 != 3) then
+if ($4 == 3) then
+	set report = reports/NoC_$1x$1$s_string$m_string$rf_string.rpt
+	set summary = reports/summary_$1x$1$s_string$m_string$rf_string.rpt
+	set report_location = `readlink -f $report`
+	echo "All the Routes and Associated Source-Destinations are in : $report_location"
+	
+	echo "For $1x$1 mesh, total number of path pairs: " > $summary 
+	grep -iP " = " $report | wc -l >> $summary 
+	echo "" >> $summary 
+	
+	set summary_location = `readlink -f $summary`
+	echo "Summary of results is in : $summary_location"
+else if ($4 == 4) then
+	set spice_dir = stimuli_$1x$1_s$2_m$3
+	set spice_location = `readlink -f $spice_dir`
+	echo "Spice files are in : $spice_location"
+else
+	set report = reports/NoC_$1x$1$s_string$m_string$rf_string.rpt
+	set summary = reports/summary_$1x$1$s_string$m_string$rf_string.rpt
+	set report_location = `readlink -f $report`
+	echo "All the Routes and Associated Source-Destinations are in : $report_location"
+	
 	echo "For $1x$1 mesh, total number of path pairs: " > $summary 
 	grep -iP "pair_" $report | wc -l >> $summary 
 	echo "" >> $summary 
@@ -140,11 +159,9 @@ if ($4 != 3) then
 	echo "Maximum and minimum possible hops in $1x$1 mesh: " >> $summary
 	grep -iP "maximum hops" $report | sort -u -gk4 | tail -1 >> $summary  
 	grep -iP "minimum hops" $report | sort -u -gk4 | head -1 >> $summary 
-else
-	echo "For $1x$1 mesh, total number of path pairs: " > $summary 
-	grep -iP " = " $report | wc -l >> $summary 
-	echo "" >> $summary 
+	
+	set summary_location = `readlink -f $summary`
+	echo "Summary of results is in : $summary_location"
 endif
 
-set summary_location = `readlink -f $summary`
-echo "Summary of results is in : $summary_location"
+

@@ -743,11 +743,18 @@ def generate_routepairs_stimuli(r, c, s_var, m_var, north_var, south_var, west_v
                                         
                                      
                                         if bit_index==len(path_frompair)-2:
-                                            f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
-                                            f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
-                                            f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                            f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
-                                            f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                            if path_index==0:
+                                                f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                f1.write(" 0 pulse(vh 0 0 slope slope th '2*th') \n")
+                                                f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                            else:
+                                                f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                f1.write('*** To observe: out'+out_dir_string+' port \n\n')
 
 
 
@@ -900,11 +907,18 @@ def generate_routepairs_stimuli_s2(r, c, s_var, m_var, north_var, south_var, wes
                                                 
                                              
                                                 if bit_index==len(path_frompair)-2:
-                                                    f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
-                                                    f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
-                                                    f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                                    f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
-                                                    f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                                    if path_index==0:
+                                                        f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                        f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(" 0 pulse(vh 0 0 slope slope th '2*th') \n")
+                                                        f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                                    else:
+                                                        f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                        f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                        f1.write('*** To observe: out'+out_dir_string+' port \n\n')
      
 
 # num_sources = 0
@@ -1055,9 +1069,16 @@ def generate_routepairs_stimuli_s2all(r, c, s_var, m_var, north_var, south_var, 
                                                 
                                              
                                                 if bit_index==len(path_frompair)-2:
-                                                    f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
-                                                    f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
-                                                    f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                                    f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
-                                                    f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                                    if path_index==0:
+                                                        f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                        f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(" 0 pulse(vh 0 0 slope slope th '2*th') \n")
+                                                        f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+                                                    else:
+                                                        f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                        f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                        f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                        f1.write('*** To observe: out'+out_dir_string+' port \n\n')
  

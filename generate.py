@@ -599,4 +599,465 @@ def generate_routepairs_concise_s2all(r, c, m_var, north_var, south_var, west_va
         f2.write("----- END ----- \n") 
 
 
-      
+
+# report_format = 4
+# num_sources = 1
+def generate_routepairs_stimuli(r, c, s_var, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+    
+    file_dir = 'stimuli_'+str(r)+'x'+str(c)+'_m'+str(m_var)
+    file_extension = '.sp'
+    
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j]) 
+            
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s = routers[y]
+                
+                hops_pairs_dict = routes_in_bits(r, c, s, d, m_var, north_var, south_var, west_var, east_var)
+                if m_var == 2:
+                    reference_dict = hops_and_route_pairs_s2(r, c, s, d)
+                elif m_var == 1:
+                    reference_dict = remove_all_overlaps(r, c, s, d)
+                else:
+                    reference_dict = remove_overlapping_paths(r, c, s, d)
+                
+                if len(hops_pairs_dict) != 0:
+                    number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                    hops_list = list(number_of_pairs_perhop.keys())    
+                    
+                        
+                    for index1 in range(0, len(hops_pairs_dict)):
+                        key = hops_list[index1]
+                        
+                        value = hops_pairs_dict[key]
+                        ref_value = reference_dict[key]
+                        
+                        for index2 in range(0, len(value)): 
+                            pair = value[index2]
+                            ref_pair = ref_value[index2]
+
+                            file_name = 'stimuli.noc.' + str(s) + '.' + str(d)+ '.' + 'hop' + str(key) + 'pair' + str(index2+1) + file_extension
+                            filename = os.path.join(file_dir, file_name)
+                            with open(filename, "w") as f1:
+                                
+                                for path_index in range(0, 2):
+                                    path_frompair_temp = pair[path_index]
+                                    path_frompair = path_frompair_temp + '00'
+                                    ref_path_frompair = ref_pair[path_index]
+                                    new_path = []
+                                    
+                                    f1.write('* Data transfer from: R' + str(s) + ' to R' + str(d) + ' --> Circuit Switched Path: \n') 
+                                    
+                                    for bit_index in range(0, len(path_frompair), 2):
+                                        
+                                        
+                                        # source - define MSB, input port
+                                        if bit_index==0:
+                                            MSB = '1' 
+                                            supply = 'vh'
+                                            inportbits = '00'
+                                            in_dir_string = 'local'
+                                            
+                                            outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                            if outportbits == str(north_var):
+                                                out_dir_string = 'north' 
+                                            elif outportbits == str(south_var):
+                                                out_dir_string = 'south'
+                                            elif outportbits == str(west_var):
+                                                out_dir_string = 'west'    
+                                            else:
+                                                out_dir_string = 'east'
+                                            out_dir_string_sel = str(out_dir_string[0])
+                                        
+                                        # if any node other than the source - set MSB, input port
+                                        else:
+                                            MSB = '0'
+                                            supply = '0'
+                                            
+                                            prevportbits = str(path_frompair[bit_index-2])+str(path_frompair[bit_index-1])
+                                            if prevportbits=='00':
+                                                inportbits = '11'
+                                            elif prevportbits=='11':
+                                                inportbits = '00'
+                                            elif prevportbits=='01':
+                                                inportbits = '10'
+                                            else:
+                                                inportbits = '01'
+
+                                            if inportbits == str(north_var):
+                                                in_dir_string = 'north'
+                                            elif inportbits == str(south_var):
+                                                in_dir_string = 'south'
+                                            elif inportbits == str(west_var):
+                                                in_dir_string = 'west'    
+                                            else:
+                                                in_dir_string = 'east'
+                                            
+                                            # destination - set output port
+                                            outportbits = '00'
+                                            if bit_index==len(path_frompair)-2:
+                                                if path_index==0:
+                                                    out_dir_string = 'local0'     
+                                                else:
+                                                    out_dir_string = 'local1'
+                                                out_dir_string_sel = str(out_dir_string[0])+str(out_dir_string[-1])
+                                            # any other node
+                                            else:
+                                                outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                                if outportbits == str(north_var):
+                                                    out_dir_string = 'north' 
+                                                elif outportbits == str(south_var):
+                                                    out_dir_string = 'south'
+                                                elif outportbits == str(west_var):
+                                                    out_dir_string = 'west'    
+                                                else:
+                                                    out_dir_string = 'east' 
+                                                out_dir_string_sel = str(out_dir_string[0])
+                                            
+                                        
+                                        f1.write('* R'+str(ref_path_frompair[int(bit_index/2)])+': out'+out_dir_string+' mux select line s2s1s0 = '+MSB+str(inportbits)+' (selecting in'+in_dir_string+' port): \n') 
+                                            
+                                        for q in range (2, -1, -1):
+                                            f1.write('vr'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                            f1.write(' r'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                            if q==2:
+                                                f1.write(' 0 ' + supply + ' \n')
+                                            else:
+                                                if q==1:
+                                                    q_new = 0
+                                                else:
+                                                    q_new = 1
+                                                if inportbits[q_new] == '0':
+                                                    f1.write(' 0 ' + '0' + ' \n')
+                                                else:
+                                                    f1.write(' 0 ' + 'vh' + ' \n')
+                                        
+                                     
+                                        if bit_index==len(path_frompair)-2:
+                                            f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                            f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                            f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                            f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
+                                            f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+
+
+
+
+# num_sources = 2
+def generate_routepairs_stimuli_s2(r, c, s_var, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+    
+    file_dir = 'stimuli_'+str(r)+'x'+str(c)+'_2S'+'_m'+str(m_var)
+    file_extension = '.sp'
+    
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j])
+    
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s1 = routers[y]
+                for k in range(0, len(routers)):
+                    if routers[k] != d and routers[k] > s1: 
+                        s2 = routers[k]
+                
+                        hops_pairs_dict = routes_in_bits_s2(r, c, s1, s2, d, m_var, north_var, south_var, west_var, east_var)
+                        if m_var == 2:
+                            reference_dict = hops_and_route_pairs_s2(r, c, s1, s2, d)
+                        elif m_var == 1:
+                            reference_dict = remove_all_overlaps_s2(r, c, s1, s2, d)
+                        else:
+                            reference_dict = remove_overlapping_paths_s2(r, c, s1, s2, d)
+                        
+                        if len(hops_pairs_dict) != 0:
+                            number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                            hops_list = list(number_of_pairs_perhop.keys())    
+                            
+                                
+                            for index1 in range(0, len(hops_pairs_dict)):
+                                key = hops_list[index1]
+                                
+                                value = hops_pairs_dict[key]
+                                ref_value = reference_dict[key]
+                                
+                                for index2 in range(0, len(value)): 
+                                    pair = value[index2]
+                                    ref_pair = ref_value[index2]
+
+                                    file_name = 'stimuli.noc.' + str(s1) + '.' + str(s2) + '.' + str(d)+ '.' + 'hop' + str(key) + 'pair' + str(index2+1) + file_extension
+                                    filename = os.path.join(file_dir, file_name)
+                                    with open(filename, "w") as f1:
+                                        
+                                        for path_index in range(0, 2):
+                                            path_frompair_temp = pair[path_index]
+                                            path_frompair = path_frompair_temp + '00'
+                                            ref_path_frompair = ref_pair[path_index]
+                                            new_path = []
+                                            
+                                            if path_index == 0:
+                                                f1.write('* Data transfer from: R' + str(s1) + ' to R' + str(d) + ' --> Circuit Switched Path: \n')
+                                            else:
+                                                f1.write('* Data transfer from: R' + str(s2) + ' to R' + str(d) + ' --> Circuit Switched Path: \n')
+                                            
+                                            for bit_index in range(0, len(path_frompair), 2):
+                                                
+                                                
+                                                # source - define MSB, input port
+                                                if bit_index==0:
+                                                    MSB = '1' 
+                                                    supply = 'vh'
+                                                    inportbits = '00'
+                                                    in_dir_string = 'local'
+                                                    
+                                                    outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                                    if outportbits == str(north_var):
+                                                        out_dir_string = 'north' 
+                                                    elif outportbits == str(south_var):
+                                                        out_dir_string = 'south'
+                                                    elif outportbits == str(west_var):
+                                                        out_dir_string = 'west'    
+                                                    else:
+                                                        out_dir_string = 'east'
+                                                    out_dir_string_sel = str(out_dir_string[0])
+                                                
+                                                # if any node other than the source - set MSB, input port
+                                                else:
+                                                    MSB = '0'
+                                                    supply = '0'
+                                                    
+                                                    prevportbits = str(path_frompair[bit_index-2])+str(path_frompair[bit_index-1])
+                                                    if prevportbits=='00':
+                                                    	inportbits = '11'
+                                                    elif prevportbits=='11':
+                                                        inportbits = '00'
+                                                    elif prevportbits=='01':
+                                                        inportbits = '10'
+                                                    else:
+                                                        inportbits = '01'
+
+                                                    if inportbits == str(north_var):
+                                                        in_dir_string = 'north'
+                                                    elif inportbits == str(south_var):
+                                                        in_dir_string = 'south'
+                                                    elif inportbits == str(west_var):
+                                                        in_dir_string = 'west'    
+                                                    else:
+                                                        in_dir_string = 'east'
+                                                    
+                                                    # destination - set output port
+                                                    outportbits = '00'
+                                                    if bit_index==len(path_frompair)-2:
+                                                        if path_index==0:
+                                                            out_dir_string = 'local0'     
+                                                        else:
+                                                            out_dir_string = 'local1'
+                                                        out_dir_string_sel = str(out_dir_string[0])+str(out_dir_string[-1])
+                                                    # any other node
+                                                    else:
+                                                        outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                                        if outportbits == str(north_var):
+                                                            out_dir_string = 'north' 
+                                                        elif outportbits == str(south_var):
+                                                            out_dir_string = 'south'
+                                                        elif outportbits == str(west_var):
+                                                            out_dir_string = 'west'    
+                                                        else:
+                                                            out_dir_string = 'east' 
+                                                        out_dir_string_sel = str(out_dir_string[0])
+                                                    
+                                                
+                                                f1.write('* R'+str(ref_path_frompair[int(bit_index/2)])+': out'+out_dir_string+' mux select line s2s1s0 = '+MSB+str(inportbits)+' (selecting in'+in_dir_string+' port): \n') 
+                                                    
+                                                for q in range (2, -1, -1):
+                                                    f1.write('vr'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                                    f1.write(' r'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                                    if q==2:
+                                                        f1.write(' 0 ' + supply + ' \n')
+                                                    else:
+                                                        if q==1:
+                                                            q_new = 0
+                                                        else:
+                                                            q_new = 1
+                                                        if inportbits[q_new] == '0':
+                                                            f1.write(' 0 ' + '0' + ' \n')
+                                                        else:
+                                                            f1.write(' 0 ' + 'vh' + ' \n')
+                                                
+                                             
+                                                if bit_index==len(path_frompair)-2:
+                                                    f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                    f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                    f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                    f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
+                                                    f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+     
+
+# num_sources = 0
+def generate_routepairs_stimuli_s2all(r, c, s_var, m_var, north_var, south_var, west_var, east_var):
+    
+    network = network_matrix(r, c)
+    
+    file_dir = 'stimuli_'+str(r)+'x'+str(c)+'_2S-all_m'+str(m_var)
+    file_extension = '.sp'
+    
+    routers = []
+    for i in range(0, len(network)):
+        for j in range(0, len(network[i])):
+            routers.append(network[i][j])
+    
+    # iterate through each destination
+    for x in range(len(routers)-1, -1, -1):
+        # get the destination router ID; d = 8
+        d = routers[x]
+        for y in range(0, len(routers)):
+            if routers[y] != d: 
+                s1 = routers[y]
+                for k in range(0, len(routers)):
+                    if routers[k] != d and routers[k] >= s1: 
+                        s2 = routers[k]
+                
+                        hops_pairs_dict = routes_in_bits_s2all(r, c, s1, s2, d, m_var, north_var, south_var, west_var, east_var)
+                        if m_var == 2:
+                            reference_dict = hops_and_route_pairs_s2all(r, c, s1, s2, d)
+                        elif m_var == 1:
+                            reference_dict = remove_all_overlaps_s2all(r, c, s1, s2, d)
+                        else:
+                            reference_dict = remove_overlapping_paths_s2all(r, c, s1, s2, d)
+                        
+                        if len(hops_pairs_dict) != 0:
+                            number_of_pairs_perhop = number_of_path_pairs(hops_pairs_dict)
+                            hops_list = list(number_of_pairs_perhop.keys())    
+                            
+                                
+                            for index1 in range(0, len(hops_pairs_dict)):
+                                key = hops_list[index1]
+                                
+                                value = hops_pairs_dict[key]
+                                ref_value = reference_dict[key]
+                                
+                                for index2 in range(0, len(value)): 
+                                    pair = value[index2]
+                                    ref_pair = ref_value[index2]
+
+                                    file_name = 'stimuli.noc.' + str(s1) + '.' + str(s2) + '.' + str(d)+ '.' + 'hop' + str(key) + 'pair' + str(index2+1) + file_extension
+                                    filename = os.path.join(file_dir, file_name)
+                                    with open(filename, "w") as f1:
+                                        
+                                        for path_index in range(0, 2):
+                                            path_frompair_temp = pair[path_index]
+                                            path_frompair = path_frompair_temp + '00'
+                                            ref_path_frompair = ref_pair[path_index]
+                                            new_path = []
+                                            
+                                            if path_index == 0:
+                                                f1.write('* Data transfer from: R' + str(s1) + ' to R' + str(d) + ' --> Circuit Switched Path: \n')
+                                            else:
+                                                f1.write('* Data transfer from: R' + str(s2) + ' to R' + str(d) + ' --> Circuit Switched Path: \n')
+                                            
+                                            for bit_index in range(0, len(path_frompair), 2):
+                                                
+                                                
+                                                # source - define MSB, input port
+                                                if bit_index==0:
+                                                    MSB = '1' 
+                                                    supply = 'vh'
+                                                    inportbits = '00'
+                                                    in_dir_string = 'local'
+                                                    
+                                                    outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                                    if outportbits == str(north_var):
+                                                        out_dir_string = 'north' 
+                                                    elif outportbits == str(south_var):
+                                                        out_dir_string = 'south'
+                                                    elif outportbits == str(west_var):
+                                                        out_dir_string = 'west'    
+                                                    else:
+                                                        out_dir_string = 'east'
+                                                    out_dir_string_sel = str(out_dir_string[0])
+                                                
+                                                # if any node other than the source - set MSB, input port
+                                                else:
+                                                    MSB = '0'
+                                                    supply = '0'
+                                                    
+                                                    prevportbits = str(path_frompair[bit_index-2])+str(path_frompair[bit_index-1])
+                                                    if prevportbits=='00':
+                                                    	inportbits = '11'
+                                                    elif prevportbits=='11':
+                                                        inportbits = '00'
+                                                    elif prevportbits=='01':
+                                                        inportbits = '10'
+                                                    else:
+                                                        inportbits = '01'
+
+                                                    if inportbits == str(north_var):
+                                                        in_dir_string = 'north'
+                                                    elif inportbits == str(south_var):
+                                                        in_dir_string = 'south'
+                                                    elif inportbits == str(west_var):
+                                                        in_dir_string = 'west'    
+                                                    else:
+                                                        in_dir_string = 'east'
+                                                    
+                                                    # destination - set output port
+                                                    outportbits = '00'
+                                                    if bit_index==len(path_frompair)-2:
+                                                        if path_index==0:
+                                                            out_dir_string = 'local0'     
+                                                        else:
+                                                            out_dir_string = 'local1'
+                                                        out_dir_string_sel = str(out_dir_string[0])+str(out_dir_string[-1])
+                                                    # any other node
+                                                    else:
+                                                        outportbits = str(path_frompair[bit_index])+str(path_frompair[bit_index+1])
+                                                        if outportbits == str(north_var):
+                                                            out_dir_string = 'north' 
+                                                        elif outportbits == str(south_var):
+                                                            out_dir_string = 'south'
+                                                        elif outportbits == str(west_var):
+                                                            out_dir_string = 'west'    
+                                                        else:
+                                                            out_dir_string = 'east' 
+                                                        out_dir_string_sel = str(out_dir_string[0])
+                                                    
+                                                
+                                                f1.write('* R'+str(ref_path_frompair[int(bit_index/2)])+': out'+out_dir_string+' mux select line s2s1s0 = '+MSB+str(inportbits)+' (selecting in'+in_dir_string+' port): \n') 
+                                                    
+                                                for q in range (2, -1, -1):
+                                                    f1.write('vr'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                                    f1.write(' r'+str(ref_path_frompair[int(bit_index/2)])+'_s'+str(q)+out_dir_string_sel)
+                                                    if q==2:
+                                                        f1.write(' 0 ' + supply + ' \n')
+                                                    else:
+                                                        if q==1:
+                                                            q_new = 0
+                                                        else:
+                                                            q_new = 1
+                                                        if inportbits[q_new] == '0':
+                                                            f1.write(' 0 ' + '0' + ' \n')
+                                                        else:
+                                                            f1.write(' 0 ' + 'vh' + ' \n')
+                                                
+                                             
+                                                if bit_index==len(path_frompair)-2:
+                                                    f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
+                                                    f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
+                                                    f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
+                                                    f1.write(" 0 pulse(vh 0 0 slope slope th '2*th' \n")
+                                                    f1.write('*** To observe: out'+out_dir_string+' port \n\n')
+ 

@@ -753,7 +753,7 @@ def generate_routepairs_stimuli(r, c, s_var, m_var, north_var, south_var, west_v
                                                 f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
                                                 f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
                                                 f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                                f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                f1.write(" 0 pulse(vh 0 clockDelay slope slope th '2*th') \n")
                                                 f1.write('*** To observe: out'+out_dir_string+' port \n\n')
 
 
@@ -917,7 +917,7 @@ def generate_routepairs_stimuli_s2(r, c, s_var, m_var, north_var, south_var, wes
                                                         f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
                                                         f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
                                                         f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                                        f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                        f1.write(" 0 pulse(vh 0 clockDelay slope slope th '2*th') \n")
                                                         f1.write('*** To observe: out'+out_dir_string+' port \n\n')
      
 
@@ -1079,6 +1079,6 @@ def generate_routepairs_stimuli_s2all(r, c, s_var, m_var, north_var, south_var, 
                                                         f1.write('\n*** Input starting at R' + str(ref_path_frompair[0]) + ': \n')
                                                         f1.write('vr' + str(ref_path_frompair[0]) + '_inlocal')
                                                         f1.write(' r' + str(ref_path_frompair[0]) + '_inlocal')
-                                                        f1.write(" 0 pulse(vh 0 'clockdelay' slope slope th '2*th') \n")
+                                                        f1.write(" 0 pulse(vh 0 clockDelay slope slope th '2*th') \n")
                                                         f1.write('*** To observe: out'+out_dir_string+' port \n\n')
  

@@ -175,7 +175,7 @@ def generate_routepairs_count_s2(nsize):
     filename = os.path.join('count', file_name) 
         
     with open(filename, "w") as f0:
-        f0.write("#HOPS-->#PATH_PAIRS\n\n")
+        f0.write("#HOPS-->#PATH_PAIRS\n")
     
     # list out all router ids first, i.e., flatten the network
     routers = []
@@ -201,11 +201,8 @@ def generate_routepairs_count_s2(nsize):
                             hops_list = list(number_of_pairs_perhop.keys()) 
                             
                             with open(filename, "a") as f1:
-                                f1.write("s1 = "+str(s1)+", s2 = "+str(s2)+", d = "+str(d)+": \n")
-
+                                
                                 for index1 in range(0, len(number_of_pairs_perhop)):
                                     key = hops_list[index1]
                                     value = number_of_pairs_perhop[key] 
                                     f1.write(str(key) + "-->" + str(value) + " \n") 
-                                    
-                                f1.write("\n")

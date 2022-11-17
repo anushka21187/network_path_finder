@@ -1,0 +1,14 @@
+#!/bin/csh -f
+
+set py_script = main2.py
+set temp_py_script = .temp.$py_script
+cp $py_script $temp_py_script
+
+perl -p -i -e 's/anushka_n/'$1'/gi;' $temp_py_script
+
+echo "Dumping #HOPS-->#PATH_PAIRS for $1x$1 mesh..."
+python3 $temp_py_script
+
+set report = count/NoC_$1x$1_2S_m1_nooverlap.ct
+set report_location = `readlink -f $report`
+echo "Report location : $report_location"

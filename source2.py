@@ -1,3 +1,5 @@
+import os
+
 def network_matrix(nsize): 
     matrix = []
     node_id = 0

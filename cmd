@@ -1,19 +1,52 @@
 #!/bin/csh -f
 #echo $1 $2 $3 $4 
 
+if ($1 == "") then
+	echo "### ERROR_0: No input arguments given. Four input arguments are necessary for correct functioning of this tool (script)."
+	echo "## Usage description:"
+	echo "$0 <square_mesh_dimension>=2> <num_sources=1or2> <mode=0or1or2> <report_format=0or1or2or3or4>"
+	echo "## Argument(s) description:"
+	echo "#1. *square_mesh_dimension*: number of rows/columns in the mesh; minimum = 2"
+	echo "#2. *num_sources*: "
+	echo "		* 1 for route pairs between one source and a fixed destination"
+	echo "		* 2 for the same between two different sources and a fixed destination"
+	echo "#3. *mode*: "
+	echo "		* 0 to remove all route pairs with common bidirectional nodes (moderately small subset)"
+	echo "		* 1 to remove route pairs with any common node (smallest subset)"
+	echo "		* 2 to include all possible route pairs (largest subset)"
+	echo "#4. *report_format*: "
+	echo "		* 0 for detailed report having direction bits"
+	echo "		* 1 for detailed report having direction chars"
+	echo "		* 2 for detailed report having node/router IDs (numbers)"
+	echo "		* 3 for concise report with format: source1_source2_destination_hop# = (source1:encoding, destination:encoding), (source2:encoding, destination:encoding)"
+	echo "		* 4 for generating all the spice files for all (s1,s2,d) triplets reported in option #3 (previous line)"
+	sleep 2s
+	echo "			#Opening the README.md for detailed help ..."
+	sleep 1s
+	echo "				#Be patient human, it is still opening ..."
+	sleep 0.5s
+	echo "					#If the above information was sufficient, you may press Ctrl+C on keyboard to prevent openeing the README-HELP window."
+	sleep 0.5s
+	echo "						#Now, definitely it will open. Bear the consequences."
+	sleep 1s
+	gvim README.md
+endif
+
 # 1. square mesh dimensions; 2 or more
 if ($1 < 2) then
-	echo "Error_1: Mesh dimension must be greater than or equal to 2."
-	echo "Usage: "
-	echo "./script <square_mesh_dimension>=2>"
+	echo "### ERROR_1: Mesh dimension must be greater than or equal to 2."
+	#echo "Usage: "
+	#echo "./script <square_mesh_dimension>=2>"
 	exit()
 endif
 
 # 2. number of sources; 1 (default) or 2
 if (($2 != 1) && ($2 != 2) && ($2 != 0)) then
-	echo "Error_2: Number of sources must be either 1 or 2."
-	echo "Usage: "
-	echo "./script <square_mesh_dimension> <number_of_sources=1or2>"
+	echo "### ERROR_2: Number of sources must be either 1 or 2:"
+	echo "				* 1 for route pairs between one source and a fixed destination"
+	echo "				* 2 for the same between two different sources and a fixed destination"
+	#echo "Usage: "
+	#echo "./script <square_mesh_dimension> <number_of_sources=1or2>"
 	exit()
 else if ($2 == 1) then
 	set num_sources = $2
@@ -31,9 +64,12 @@ endif
 
 # 3. mode; 0 (default) --> nodes common but not bidirectional, 1 --> no common node, 2 --> nodes can be common
 if (($3 < 0) || ($3 > 2)) then
-	echo "Error_3: valid modes are 0 (partial overlap: route pairs with bidirectional common nodes removed), 1 (no overlap: route pairs with any common node removed), 2 (no common node removed)."
-	echo "Usage: "
-	echo "./script <square_mesh_dimension> <number_of_sources> <mode=0or1or2>"
+	echo "### ERROR_3: valid modes are 0 (partial overlap: route pairs with bidirectional common nodes removed), 1 (no overlap: route pairs with any common node removed), 2 (no common node removed)."
+	echo "				* 0 to remove all route pairs with common bidirectional nodes (moderately small subset)"
+	echo "				* 1 to remove route pairs with any common node (smallest subset)"
+	echo "				* 2 to include all possible route pairs (largest subset)"
+	#echo "Usage: "
+	#echo "./script <square_mesh_dimension> <number_of_sources> <mode=0or1or2>"
 	exit()
 else if ($3 == 0) then
 	set mode = $3
@@ -51,9 +87,15 @@ endif
 
 # 4. report format; 0 (default) --> bitstring, 3 --> CONCISE (bits), 1 --> directions, 2 --> router/node IDs
 if (($4 < 0) || ($4 > 4)) then
-	echo "Error_4: valid report formats are 0 (bits), 1 (directions), 2 (router/node IDs)."
-	echo "Usage: "
-	echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
+	#echo "### ERROR_4: valid detailed report formats are 0 (bits), 1 (directions), 2 (router/node IDs); concise format is 3 (s1_s2_d_hop#:respective_encoding); SPICE file generation is 4."
+	echo "### ERROR_4: valid arguments are: 0 or 1 or 2 or 3 or 4. Details:"
+	echo "				* 0 for detailed report having direction bits"
+	echo "				* 1 for detailed report having direction chars"
+	echo "				* 2 for detailed report having node/router IDs (numbers)"
+	echo "				* 3 for concise report with format: source1_source2_destination_hop# = (source1:encoding, destination:encoding), (source2:encoding, destination:encoding)"
+	echo "				* 4 for generating all the spice files for all (s1,s2,d) triplets reported in option #3 (previous line)"
+	#echo "Usage: "
+	#echo "./script <square_mesh_dimension> <number_of_sources> <mode> <report_format=0or1or2>"
 	exit()
 else if ($4 == 3) then
 	set report_format = $4
@@ -163,5 +205,4 @@ else
 	set summary_location = `readlink -f $summary`
 	echo "Summary of results is in : $summary_location"
 endif
-
 
